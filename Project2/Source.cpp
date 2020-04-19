@@ -31,7 +31,7 @@ struct Pensioner
 	Birthday DATE;
 };
 
-//функция корректности даты;
+//функции корректности даты;
 bool Birthday::isCorrect()
 {
 	bool result = false;
@@ -93,6 +93,73 @@ bool Birthday::isCorrect()
 	return result;
 }
 
+int isCorrect1(int day, int month, int year)
+{
+	int count = 0;
+
+	if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+	{
+		if (day <= 31 && day > 0)
+		{
+			count++;
+		}
+	}
+
+	if (month == 4 || month == 6 || month == 9 || month == 11)
+	{
+		if (day <= 30 && day > 0)
+		{
+			count++;
+		}
+	}
+
+	else
+	{
+		if (month == 2 && year % 4 != 0)
+		{
+			if (day <= 28 && day > 0)
+			{
+				count++;
+			}
+		}
+
+		else
+		{
+			if (year % 400 == 0)
+			{
+				if ((day <= 29) && (day > 0))
+				{
+					count++;
+				}
+			}
+
+			else
+			{
+				if ((year % 100 == 0) && (year % 400 != 0))
+				{
+					if ((day == 28) && (day > 0))
+					{
+						count++;
+					}
+				}
+
+				else
+				{
+					if ((year % 4 == 0) && (year % 100 != 0))
+					{
+						if ((day <= 29) && (day > 0))
+						{
+							count++;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return count;
+}
+
 //функция подсчета в днях жизни пенсионеров;
 void Old_time(Pensioner* arr, int size)
 {
@@ -101,12 +168,12 @@ void Old_time(Pensioner* arr, int size)
 		int count1;
 		count1 = arr[i].DATE.year;
 
-		for (int j = 1; j <= count1; j++)
+		for (int j = 0; j <= count1; j++)
 		{
 			if (j % 4 != 0)
 			{
 				arr[i].time += 365;
-				if (j == count1 - 1)
+				if (j == count1)
 				{
 					if (arr[i].DATE.month == 1)
 						arr[i].time += 31 + arr[i].DATE.date;
@@ -138,7 +205,7 @@ void Old_time(Pensioner* arr, int size)
 			if (j % 4 == 0)
 			{
 				arr[i].time += 366;
-				if (j == count1 - 1)
+				if (j == count1)
 				{
 					if (arr[i].DATE.month == 1)
 						arr[i].time += 31 + arr[i].DATE.date;
@@ -167,6 +234,65 @@ void Old_time(Pensioner* arr, int size)
 				}
 			}
 		}	
+	}
+}
+
+void New_time(int full_time, int year, int day, int month)
+{
+	if (year % 4 != 0)
+	{
+		if (month == 1)
+			full_time += 31 + day;
+		if (month == 2)
+			full_time += 28 + 31 + day;
+		if (month == 3)
+			full_time += 31 * 2 + 28 + day;
+		if (month == 4)
+			full_time += 31 * 2 + 28 + 30 + day;
+		if (month == 5)
+			full_time += 31 * 3 + 30 + 28 + day;
+		if (month == 6)
+			full_time += 31 * 3 + 30 * 2 + 28 + day;
+		if (month == 7)
+			full_time += 31 * 4 + 30 * 2 + 28 + day;
+		if (month == 8)
+			full_time += 31 * 5 + 30 * 2 + 28 + day;
+		if (month == 9)
+			full_time += 31 * 5 + 30 * 3 + 28 + day;
+		if (month == 10)
+			full_time += 31 * 6 + 30 * 3 + 28 + day;
+		if (month == 11)
+			full_time += 31 * 6 + 30 * 4 + 28 + day;
+		if (month == 12)
+			full_time += 31 * 7 + 30 * 4 + 28 + day;
+	}
+
+	if (year % 4 == 0)
+	{
+		if (month == 1)
+			full_time += 31 + day;
+		if (month == 2)
+			full_time += 29 + 31 + day;
+		if (month == 3)
+			full_time += 31 * 2 + 29 + day;
+		if (month == 4)
+			full_time += 31 * 2 + 29 + 30 + day;
+		if (month == 5)
+			full_time += 31 * 3 + 30 + 29 + day;
+		if (month == 6)
+			full_time += 31 * 3 + 30 * 2 + 29 + day;
+		if (month == 7)
+			full_time += 31 * 4 + 30 * 2 + 29 + day;
+		if (month == 8)
+			full_time += 31 * 5 + 30 * 2 + 29 + day;
+		if (month == 9)
+			full_time += 31 * 5 + 30 * 3 + 29 + day;
+		if (month == 10)
+			full_time += 31 * 6 + 30 * 3 + 29 + day;
+		if (month == 11)
+			full_time += 31 * 6 + 30 * 4 + 29 + day;
+		if (month == 12)
+			full_time += 31 * 7 + 30 * 4 + 29 + day;
 	}
 }
 
@@ -320,8 +446,7 @@ void easy()
 
 	do
 	{
-		count = 0;
-
+		
 		cout << "Введите нынешний день: ";
 		cin >> day;
 		cout << endl;
@@ -329,69 +454,9 @@ void easy()
 		cin >> month;
 		cout << endl;
 
-		if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-		{
-			if (day <= 31 && day > 0)
-			{
-				count++;
-			}
-		}
+	} while (isCorrect1(day, month, year) == 0); //подсчет в днях нынешнего года;
 
-		if (month == 4 || month == 6 || month == 9 || month == 11)
-		{
-			if (day <= 30 && day > 0)
-			{
-				count++;
-			}
-		}
-
-		else
-		{
-			if (month == 2 && year % 4 != 0)
-			{
-				if (day <= 28 && day > 0)
-				{
-					count++;
-				}
-			}
-
-			else
-			{
-				if (year % 400 == 0)
-				{
-					if ((day <= 29) && (day > 0))
-					{
-						count++;
-					}
-				}
-
-				else
-				{
-					if ((year % 100 == 0) && (year % 400 != 0))
-					{
-						if ((day == 28) && (day > 0))
-						{
-							count++;
-						}
-					}
-
-					else
-					{
-						if ((year % 4 == 0) && (year % 100 != 0))
-						{
-							if ((day <= 29) && (day > 0))
-							{
-								count++;
-							}
-						}
-					}
-				}
-			}
-		}
-
-	} while (count == 0); //подсчет в днях нынешнего года;
-
-	for (int i = 1; i <= year; i++) //находим нынешнее время в днях;
+	for (int i = 0; i <= year; i++) //находим нынешнее время в днях;
 	{
 		if (i % 4 != 0)
 		{
@@ -404,61 +469,7 @@ void easy()
 		}
 	}
 
-	if (year % 4 != 0)
-	{
-		if (month == 1)
-			full_time += 31 + day;
-		if (month == 2)
-			full_time += 28 + 31 + day;
-		if (month == 3)
-			full_time += 31 * 2 + 28 + day;
-		if (month == 4)
-			full_time += 31 * 2 + 28 + 30 + day;
-		if (month == 5)
-			full_time += 31 * 3 + 30 + 28 + day;
-		if (month == 6)
-			full_time += 31 * 3 + 30 * 2 + 28 + day;
-		if (month == 7)
-			full_time += 31 * 4 + 30 * 2 + 28 + day;
-		if (month == 8)
-			full_time += 31 * 5 + 30 * 2 + 28 + day;
-		if (month == 9)
-			full_time += 31 * 5 + 30 * 3 + 28 + day;
-		if (month == 10)
-			full_time += 31 * 6 + 30 * 3 + 28 + day;
-		if (month == 11)
-			full_time += 31 * 6 + 30 * 4 + 28 + day;
-		if (month == 12)
-			full_time += 31 * 7 + 30 * 4 + 28 + day;
-	}
-
-	if (year % 4 == 0)
-	{
-		if (month == 1)
-			full_time += 31 + day;
-		if (month == 2)
-			full_time += 29 + 31 + day;
-		if (month == 3)
-			full_time += 31 * 2 + 29 + day;
-		if (month == 4)
-			full_time += 31 * 2 + 29 + 30 + day;
-		if (month == 5)
-			full_time += 31 * 3 + 30 + 29 + day;
-		if (month == 6)
-			full_time += 31 * 3 + 30 * 2 + 29 + day;
-		if (month == 7)
-			full_time += 31 * 4 + 30 * 2 + 29 + day;
-		if (month == 8)
-			full_time += 31 * 5 + 30 * 2 + 29 + day;
-		if (month == 9)
-			full_time += 31 * 5 + 30 * 3 + 29 + day;
-		if (month == 10)
-			full_time += 31 * 6 + 30 * 3 + 29 + day;
-		if (month == 11)
-			full_time += 31 * 6 + 30 * 4 + 29 + day;
-		if (month == 12)
-			full_time += 31 * 7 + 30 * 4 + 29 + day;
-	}
+	New_time(full_time, year, day, month); //функция нахождения нынешнего времени в днях;
 
 	Old_time(arr, size); //функция нахождения времени жизни пенсионеров в днях;
 
@@ -488,6 +499,12 @@ void easy()
 	{
 		long long int different = full_time - arr[i].time;
 
+		cout << "Пенсионер " << i + 1 << endl;
+		cout << "Полное время в днях - " << full_time << endl;
+		cout << "Время жизни в днях - " << arr[i].time << endl;
+		cout << "65 лет в днях - " << sixty_year_time << endl;
+		cout << "Разница - " << different << endl << endl;
+
 		if (different > sixty_year_time)
 		{
 			if (!write.is_open()) //если не удается открыть файл - выдаем сообщение;
@@ -497,10 +514,10 @@ void easy()
 
 			else
 			{
-				write << "Фамилия человека под номером " << i + 1 << ": " << arr[i].surname << ", Имя: " << arr[i].name << ", Отчество: " << arr[i].patronomyc << endl;
+				write << "Фамилия пенсионера под номером " << i + 1 << ": " << arr[i].surname << ", Имя: " << arr[i].name << ", Отчество: " << arr[i].patronomyc << endl;
 				write << "Пол: " << arr[i].sex << ", Национальность: " << arr[i].nationality << ", Дата Рождения: " << arr[i].DATE.date << " " << arr[i].DATE.month << " " << arr[i].DATE.year << endl;
 				write << "Номер телефона: " << arr[i].phone_number << ", Почтовый индекс: " << arr[i].index << ", Страна: " << arr[i].country << ", Регион: " << arr[i].region << ", Город: " << arr[i].city << endl;
-				write << "Улица: " << arr[i].street << ", Дом: " << arr[i].home << ", Квартира: " << arr[i].apartment << endl;
+				write << "Улица: " << arr[i].street << ", Дом: " << arr[i].home << ", Квартира: " << arr[i].apartment << endl << endl;
 				count2++;
 			}
 
@@ -511,10 +528,10 @@ void easy()
 
 			else
 			{
-				new_write << "Фамилия человека под номером " << i + 1 << ": " << arr[i].surname << ", Имя: " << arr[i].name << ", Отчество: " << arr[i].patronomyc << endl;
+				new_write << "Фамилия пенсионера под номером " << i + 1 << ": " << arr[i].surname << ", Имя: " << arr[i].name << ", Отчество: " << arr[i].patronomyc << endl;
 				new_write << "Пол: " << arr[i].sex << ", Национальность: " << arr[i].nationality << ", Дата Рождения: " << arr[i].DATE.date << " " << arr[i].DATE.month << " " << arr[i].DATE.year << endl;
 				new_write << "Номер телефона: " << arr[i].phone_number << ", Почтовый индекс: " << arr[i].index << ", Страна: " << arr[i].country << ", Регион: " << arr[i].region << ", Город: " << arr[i].city << endl;
-				new_write << "Улица: " << arr[i].street << ", Дом: " << arr[i].home << ", Квартира: " << arr[i].apartment << endl;
+				new_write << "Улица: " << arr[i].street << ", Дом: " << arr[i].home << ", Квартира: " << arr[i].apartment << endl << endl;
 				count2++;
 			}
 		}
@@ -526,7 +543,7 @@ void easy()
 		new_write << "Нет пенсионеров с пенсионным стажем больше 5 лет";
 	}
 
-	cout << endl << endl << "Соответсвенная информация вывелась в текстовый файл";
+	cout << endl << "Соответсвенная информация вывелась в текстовый файл";
     cout << endl << endl;
 }
 
